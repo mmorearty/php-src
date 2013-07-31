@@ -52,16 +52,19 @@ typedef void (*copy_ctor_param_func_t)(void *pElement, void *pParam);
 
 struct _hashtable;
 
-typedef struct bucket {
+// [mmorearty] For the common case of a PHP array,
+// 1. pDataPtr points to a zval with the value
+// 2.
+typedef struct bucket { // [mmorearty] Actually this is one bucket ITEM. It is huge! (~40 bytes)
 	ulong h;						/* Used for numeric indexing */
-	uint nKeyLength;
-	void *pData;
-	void *pDataPtr;
-	struct bucket *pListNext;
-	struct bucket *pListLast;
-	struct bucket *pNext;
-	struct bucket *pLast;
-	const char *arKey;
+	uint nKeyLength;			// [mmorearty] if zero, that means the key is numeric, in `h`
+	void *pData;				// [mmorearty] points to the data, which may be in `pDataPtr`
+	void *pDataPtr;				// [mmorearty] the data itself if the data's size == sizeof(void*)
+	struct bucket *pListNext;	// [mmorearty] next element in the entire hashtable
+	struct bucket *pListLast;	// [mmorearty] previous element in the entire hashtable
+	struct bucket *pNext;		// [mmorearty] next element in this bucket
+	struct bucket *pLast;		// [mmorearty] previous element in this bucket
+	const char *arKey;			// [mmorearty] may point just past the bucket
 } Bucket;
 
 typedef struct _hashtable {
@@ -70,8 +73,8 @@ typedef struct _hashtable {
 	uint nNumOfElements;
 	ulong nNextFreeElement;
 	Bucket *pInternalPointer;	/* Used for element traversal */
-	Bucket *pListHead;
-	Bucket *pListTail;
+	Bucket *pListHead;			// [mmorearty] first element in the entire hashtable
+	Bucket *pListTail;			// [mmorearty] last element in the entire hashtable
 	Bucket **arBuckets;
 	dtor_func_t pDestructor;
 	zend_bool persistent;

@@ -1079,7 +1079,7 @@ num_index:
 						zval *new_zval = &EG(uninitialized_zval);
 
 						Z_ADDREF_P(new_zval);
-						zend_hash_index_update(ht, hval, &new_zval, sizeof(zval *), (void **) &retval);
+						zend_hash_index_update(ht, hval, &new_zval, sizeof(zval *), (void **) &retval); // [mmorearty] $foo[some_int] = ...
 					}
 					break;
 				}

@@ -181,6 +181,7 @@ ZEND_API double zend_string_to_double(const char *number, zend_uint length) /* {
 }
 /* }}} */
 
+// [mmorearty] see if all the convert_... functions in this file need updating
 ZEND_API void convert_scalar_to_number(zval *op TSRMLS_DC) /* {{{ */
 {
 	switch (Z_TYPE_P(op)) {

@@ -116,7 +116,7 @@ typedef HashTable *(*zend_object_get_gc_t)(zval *object, zval ***table, int *n T
 
 typedef int (*zend_object_do_operation_t)(zend_uchar opcode, zval *result, zval *op1, zval *op2 TSRMLS_DC);
 
-struct _zend_object_handlers {
+struct _zend_object_handlers { // [mmorearty] this is important; described in OBJECTS2_HOWTO
 	/* general object functions */
 	zend_object_add_ref_t					add_ref;
 	zend_object_del_ref_t					del_ref;

@@ -543,6 +543,7 @@ END_EXTERN_C()
 #define CHECK_ZVAL_NULL_PATH(p) (Z_STRLEN_P(p) != strlen(Z_STRVAL_P(p)))
 #define CHECK_NULL_PATH(p, l) (strlen(p) != l)
 
+// [mmorearty] these may need changing {
 #define ZVAL_RESOURCE(z, l) do {	\
 		zval *__z = (z);			\
 		Z_LVAL_P(__z) = l;			\
@@ -610,6 +611,7 @@ END_EXTERN_C()
 		Z_SET_ISREF_TO_P(z, is_ref);			\
 		Z_SET_REFCOUNT_P(z, refcount);			\
 	}
+// [mmorearty] }
 
 #define ZVAL_FALSE(z)  					ZVAL_BOOL(z, 0)
 #define ZVAL_TRUE(z)  					ZVAL_BOOL(z, 1)

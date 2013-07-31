@@ -22,6 +22,7 @@
 #include "zend.h"
 #include "zend_globals.h"
 
+// [mmorearty] add an element to the doubly-linked list for a bucket
 #define CONNECT_TO_BUCKET_DLLIST(element, list_head)		\
 	(element)->pNext = (list_head);							\
 	(element)->pLast = NULL;								\
@@ -29,6 +30,7 @@
 		(element)->pNext->pLast = (element);				\
 	}
 
+// [mmorearty] add an element to the doubly-linked list for the entire hashtable
 #define CONNECT_TO_GLOBAL_DLLIST(element, ht)				\
 	(element)->pListLast = (ht)->pListTail;					\
 	(ht)->pListTail = (element);							\
@@ -244,7 +246,7 @@ ZEND_API int _zend_hash_add_or_update(HashTable *ht, const char *arKey, uint nKe
 		p->arKey = arKey;
 	} else {
 		p = (Bucket *) pemalloc(sizeof(Bucket) + nKeyLength, ht->persistent);
-		p->arKey = (const char*)(p + 1);
+		p->arKey = (const char*)(p + 1); // [mmorearty] fairly low-hanging fruit
 		memcpy((char*)p->arKey, arKey, nKeyLength);
 	}
 	p->nKeyLength = nKeyLength;

@@ -318,22 +318,22 @@ typedef struct _zend_object {
 
 #include "zend_object_handlers.h"
 
-typedef union _zvalue_value {
+typedef union _zvalue_value { // [mmorearty] the main problem
 	long lval;					/* long value */
 	double dval;				/* double value */
 	struct {
 		char *val;
 		int len;
-	} str;
-	HashTable *ht;				/* hash table value */
+	} str;						// [mmorearty] string value
+	HashTable *ht;				/* hash table value */ // [mmorearty] i.e. array / assoc. array
 	zend_object_value obj;
 } zvalue_value;
 
-struct _zval_struct {
+struct _zval_struct { // [mmorearty] the main problem
 	/* Variable information */
 	zvalue_value value;		/* value */
 	zend_uint refcount__gc;
-	zend_uchar type;	/* active type */
+	zend_uchar type;	/* active type */ // [mmorearty] e.g. IS_STRING etc.
 	zend_uchar is_ref__gc;
 };
 
@@ -393,6 +393,7 @@ struct _zval_struct {
 # define UNEXPECTED(condition) (condition)
 #endif
 
+// [mmorearty] update all the following {
 static zend_always_inline zend_uint zval_refcount_p(zval* pz) {
 	return pz->refcount__gc;
 }
@@ -424,6 +425,7 @@ static zend_always_inline zend_bool zval_unset_isref_p(zval* pz) {
 static zend_always_inline zend_bool zval_set_isref_to_p(zval* pz, zend_bool isref) {
 	return pz->is_ref__gc = isref;
 }
+// [mmorearty] }
 
 /* excpt.h on Digital Unix 4.0 defines function_table */
 #undef function_table
@@ -584,7 +586,7 @@ typedef int (*zend_write_func_t)(const char *str, uint str_length);
 #define IS_ARRAY	4
 #define IS_OBJECT	5
 #define IS_STRING	6
-#define IS_RESOURCE	7
+#define IS_RESOURCE	7 // [mmorearty] e.g. mysql link from mysql_connect(), or file from fopen()
 #define IS_CONSTANT	8
 #define IS_CONSTANT_ARRAY	9
 #define IS_CALLABLE	10
@@ -738,6 +740,7 @@ END_EXTERN_C()
 #define ZMSG_LOG_SCRIPT_NAME			6L
 #define ZMSG_MEMORY_LEAKS_GRAND_TOTAL	7L
 
+// [mmorearty] update this
 #define INIT_PZVAL(z)		\
 	(z)->refcount__gc = 1;	\
 	(z)->is_ref__gc = 0;
